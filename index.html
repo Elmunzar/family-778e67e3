@@ -200,6 +200,7 @@
 
 <header>
   <h1 id="home-btn" title="الصفحة الرئيسية" style="cursor:pointer">🌳 شجرة العائلة</h1>
+  <button class="btn" id="home-btn2">🏠 عائلتنا</button>
   <button class="btn" id="nav-back" style="display:none">↩︎ رجوع</button>
   <input id="search" type="search" placeholder="ابحث عن اسم…" autocomplete="off">
   <button class="btn" id="mode-focus">تصفّح</button>
@@ -13017,6 +13018,7 @@ function render(){
   else renderOutline(stage);
 }
 $("#home-btn").addEventListener("click",()=>{ state.mode="home"; render(); });
+$("#home-btn2").addEventListener("click",()=>{ state.mode="home"; render(); });
 (function(){ var sp=$("#splash"); if(sp) sp.addEventListener("click",function(){
   sp.classList.add("hide"); state.mode="home"; render(); setTimeout(()=>{ sp.style.display="none"; },600);
 }); })();
