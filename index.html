@@ -170,6 +170,7 @@
 
 <header>
   <h1>🌳 شجرة العائلة</h1>
+  <button class="btn" id="nav-back" style="display:none">↩︎ رجوع</button>
   <input id="search" type="search" placeholder="ابحث عن اسم…" autocomplete="off">
   <button class="btn" id="mode-focus">تصفّح</button>
   <button class="btn" id="mode-outline">الشجرة الكاملة</button>
@@ -12619,10 +12620,17 @@ function addTile(label, onClick){
 /* =========================================================
    FOCUS VIEW
    ========================================================= */
-function focusOn(id){
+let navHistory = [];
+function focusOn(id, _back){
   const info = IDX[id]; if(!info) return;
+  if(!_back && state.focusId && state.focusId!==id) navHistory.push(state.focusId);
   state.focusId = id; state.branchId = info.branch.id; state.mode="focus";
   render();
+}
+function goBack(){
+  if(!navHistory.length) return;
+  const id = navHistory.pop();
+  if(IDX[id]) focusOn(id, true);
 }
 
 function crumbsFor(id){
@@ -12878,6 +12886,7 @@ emenu.querySelector(".list").addEventListener("click",e=>{
 /* =========================================================
    TOP CONTROLS + RENDER
    ========================================================= */
+$("#nav-back").addEventListener("click", goBack);
 $("#mode-focus").addEventListener("click",()=>{ state.mode="focus"; render(); });
 $("#mode-outline").addEventListener("click",()=>{ state.mode="outline"; render(); });
 $("#edit-toggle").addEventListener("click",function(){ state.edit=!state.edit; render(); });
@@ -12905,7 +12914,7 @@ function renderBranchPicker(stage){
   DATA.branches.forEach(b=>{
     const btn=el("button",null,b.title);
     if(b.id===state.branchId) btn.classList.add("on");
-    btn.addEventListener("click",()=>{ state.branchId=b.id; const r=(b.roots||[])[0]; if(r) state.focusId=r.id; state.mode="focus"; render(); });
+    btn.addEventListener("click",()=>{ const r=(b.roots||[])[0]; if(r){ focusOn(r.id); } else { state.branchId=b.id; state.mode="focus"; render(); } });
     bp.appendChild(btn);
   });
   stage.appendChild(bp);
@@ -12917,6 +12926,7 @@ function render(){
   $("#edit-toggle").classList.toggle("on",state.edit);
   $("#mode-focus").classList.toggle("on",state.mode==="focus");
   $("#mode-outline").classList.toggle("on",state.mode==="outline");
+  const _bk=$("#nav-back"); if(_bk) _bk.style.display=(navHistory.length && state.mode==="focus")?"":"none";
   const stage=$("#stage"); stage.innerHTML="";
   if(state.mode==="focus"){ renderBranchPicker(stage); renderFocus(stage); }
   else renderOutline(stage);
