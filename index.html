@@ -157,10 +157,15 @@
   #splash{position:fixed; inset:0; z-index:100; display:flex; flex-direction:column; align-items:center; justify-content:center;
     text-align:center; padding:24px; cursor:pointer;
     background:radial-gradient(120% 90% at 50% 22%, #f7efd7, #e6d4a8);}
-  #splash .tree{font-size:58px; margin-bottom:2px; filter:drop-shadow(0 3px 4px rgba(60,45,15,.25))}
-  #splash .big{font-family:"SF Arabic","Geeza Pro",serif; font-size:clamp(46px,13vw,96px); font-weight:800; color:#584520; line-height:1.15}
-  #splash .mashallah{font-size:clamp(28px,8vw,52px); color:#9a7a2f; margin-top:10px; font-weight:700}
-  #splash .enter{margin-top:32px; font-size:15px; color:#7c6c46; border:1px solid #c8b483; border-radius:999px;
+  #splash .familybtn{display:flex; flex-direction:column; align-items:center; gap:4px; cursor:pointer; font:inherit;
+    background:#fffdf7; border:2px solid #c8a24a; border-radius:28px; padding:clamp(26px,6vw,44px) clamp(40px,10vw,72px);
+    box-shadow:0 10px 30px rgba(60,45,15,.26); transition:transform .12s, box-shadow .12s}
+  #splash .familybtn:hover{transform:translateY(-3px); box-shadow:0 15px 38px rgba(60,45,15,.34)}
+  #splash .familybtn:active{transform:translateY(0)}
+  #splash .tree{display:block; font-size:clamp(42px,10vw,62px); filter:drop-shadow(0 3px 4px rgba(60,45,15,.25))}
+  #splash .big{display:block; font-family:"SF Arabic","Geeza Pro",serif; font-size:clamp(40px,11vw,82px); font-weight:800; color:#584520; line-height:1.15}
+  #splash .mashallah{display:block; font-size:clamp(26px,7vw,46px); color:#9a7a2f; margin-top:6px; font-weight:700}
+  #splash .enter{margin-top:26px; font-size:15px; color:#7c6c46; border:1px solid #c8b483; border-radius:999px;
     padding:9px 20px; background:rgba(255,255,255,.55)}
   #splash.hide{opacity:0; pointer-events:none; transition:opacity .55s ease}
   .home{max-width:820px; margin:22px auto 44px; text-align:center; padding:0 12px}
@@ -192,10 +197,12 @@
 </style>
 
 <div id="splash">
-  <div class="tree">🌳</div>
-  <div class="big">عائلتنا</div>
-  <div class="mashallah">ما شاء الله</div>
-  <div class="enter">اضغط للدخول</div>
+  <button class="familybtn" id="enter-btn">
+    <span class="tree">🌳</span>
+    <span class="big">عائلتنا</span>
+    <span class="mashallah">ما شاء الله</span>
+  </button>
+  <div class="enter">اضغط لاختيار الفرع</div>
 </div>
 
 <header>
@@ -12988,9 +12995,8 @@ function renderBranchPicker(stage){
 
 function renderHome(stage){
   const h=el("div","home");
-  h.appendChild(el("div","htitle","عائلتنا"));
-  h.appendChild(el("div","hmash","ما شاء الله"));
-  h.appendChild(el("div","hsub","اختر فرعًا لعرض الشجرة"));
+  h.appendChild(el("div","htitle","اختر الفرع"));
+  h.appendChild(el("div","hsub","اضغط على الفرع لعرض شجرته"));
   const grid=el("div","homegrid");
   (DATA.branches||[]).forEach(b=>{
     const card=el("div","branchcard");
@@ -13017,11 +13023,12 @@ function render(){
   else if(state.mode==="focus"){ renderBranchPicker(stage); renderFocus(stage); }
   else renderOutline(stage);
 }
-$("#home-btn").addEventListener("click",()=>{ state.mode="home"; render(); });
-$("#home-btn2").addEventListener("click",()=>{ state.mode="home"; render(); });
-(function(){ var sp=$("#splash"); if(sp) sp.addEventListener("click",function(){
-  sp.classList.add("hide"); state.mode="home"; render(); setTimeout(()=>{ sp.style.display="none"; },600);
-}); })();
+function showSplash(){ var sp=$("#splash"); if(sp){ sp.style.display="flex"; sp.classList.remove("hide"); } window.scrollTo(0,0); }
+function enterHome(){ state.mode="home"; render(); var sp=$("#splash"); if(sp){ sp.classList.add("hide"); setTimeout(()=>{ sp.style.display="none"; },450); } }
+$("#home-btn").addEventListener("click", showSplash);
+$("#home-btn2").addEventListener("click", showSplash);
+(function(){ var eb=$("#enter-btn"); if(eb) eb.addEventListener("click", enterHome);
+  var sp=$("#splash"); if(sp) sp.addEventListener("click", function(e){ if(e.target===sp) enterHome(); }); })();
 if(VIEW_ONLY){ state.edit=false; var _et=$("#edit-toggle"); if(_et) _et.style.display="none"; }
 render();
 </script>
