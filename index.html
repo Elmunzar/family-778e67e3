@@ -266,7 +266,7 @@
 {
  "title": "شجرة العائلة الكبيرة",
  "note": "أربعة فروع مترابطة بالمصاهرة والأصل. حرّر وأضف الصور والمعلومات تحت كل اسم.",
- "version": "329f74d341",
+ "version": "cb9befce45",
  "branches": [
   {
    "id": "salama",
@@ -967,7 +967,7 @@
            "sex": "f"
           },
           {
-           "name": "بنات خليلي",
+           "name": "ست البنات",
            "marriage": "عثمان عبدالرحمن باجوري",
            "children": [
             {
@@ -1080,21 +1080,6 @@
              ]
             }
            ],
-           "sex": "f"
-          },
-          {
-           "name": "جارة",
-           "notes": "بنت محمد خليلينتود",
-           "sex": "f"
-          },
-          {
-           "name": "زينب",
-           "notes": "بنت محمد خليلينتود",
-           "sex": "f"
-          },
-          {
-           "name": "ست البنات",
-           "notes": "بنت محمد خليلينتود",
            "sex": "f"
           }
          ]
@@ -12782,8 +12767,8 @@ function renderFocus(stage){
   // ---- children ----
   const kids = p.children||[];
   stage.appendChild(el("div","connector"));
-  const clabel = el("div","rowlabel", kids.length? ("الأبناء ("+kids.length+")") : "الأبناء");
-  stage.appendChild(clabel);
+  stage.appendChild(el("div","rowlabel",
+    kids.length ? ("الأبناء ("+kids.length+")") : (state.edit ? "الأبناء" : "— لا أبناء مسجّلون في المصدر —")));
   if(kids.length){ const bar=el("div","cbar"); bar.style.width="70%"; stage.appendChild(bar); }
   const crow=el("div","rowwrap"); const cstrip=el("div","strip");
   kids.forEach(k=>{
